@@ -1,7 +1,7 @@
-import app from './app.js'
-import { PORT } from './config.js';
+import app from './src/app.js'
+import { PORT } from './src/config.js';
 
-import { connectDB } from './db.js';
+import { connectDB } from './src/db.js';
 
 connectDB();
 
