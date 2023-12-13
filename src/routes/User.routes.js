@@ -4,10 +4,11 @@ import { Router } from 'express';
 import { validarToken } from '../middlewares/validarToken.js'
 
 //Controllers
-import { updateUser } from '../controllers/User.controller.js';
+import { updateUser, getUsers } from '../controllers/User.controller.js';
 
 const router = Router();
 
+router.get('/getUsers', getUsers);
 router.put('/update', validarToken, updateUser);
 
 export default router;
