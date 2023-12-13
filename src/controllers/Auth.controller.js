@@ -40,7 +40,7 @@ export const signIn = async (req, res) => {
             expiresIn: 604800 //1 semana!!
         })
 
-        return res.json({ token });
+        return res.status(200).json({ token });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Ocurrió un error inesperado" })
