@@ -15,7 +15,20 @@ export const agregarPelea = async (req, res) => {
 
         const savedPelea = await newPelea.save();
 
-        const actualUser = await User.findByIdAndUpdate(userId, { $push: { historial: savedPelea._id } }, { new: true })
+        let updateQuery;
+
+        if (idGanador === idHeroe1) {
+            updateQuery = {
+                $push: { historial: savedPelea._id, equipos: idHeroe2 }
+            };
+        } else {
+            updateQuery = {
+                $push: { historial: savedPelea._id },
+                $pull: { equipos: idHeroe1 }
+            };
+        }
+
+        const actualUser = await User.findByIdAndUpdate(userId, updateQuery, { new: true });
 
         return res.status(200).json({
             message: "La pelea se guardó correctamente",
@@ -23,6 +36,6 @@ export const agregarPelea = async (req, res) => {
         })
     } catch (error) {
         console.log(error);
-        return res.status(500).json({message:"Ocurrió un error inesperado"})
+        return res.status(500).json({ message: "Ocurrió un error inesperado" })
     }
 }
