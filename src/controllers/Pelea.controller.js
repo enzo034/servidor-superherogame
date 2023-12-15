@@ -1,6 +1,23 @@
 import User from '../models/User.model.js';
 import Pelea from '../models/Pelea.model.js';
 
+export const getPeleasByUser = async (req, res) => {
+    const userId = req.userId;
+
+    const user = await User.findById(userId);
+
+    if(user.historial.length < 1){
+        return res.status(204);
+    }
+
+    const historialCompleto = await Pelea.find({ _id: { $in: user.historial } });
+
+    return res.status(200).json({
+        message: "La petición fué completada exitosamente",
+        historialCompleto,
+    });
+}
+
 export const agregarPelea = async (req, res) => {
     try {
         const { idHeroe1, idHeroe2, idGanador, fechaPelea } = req.body;

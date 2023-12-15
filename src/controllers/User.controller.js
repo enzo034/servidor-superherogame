@@ -1,5 +1,23 @@
 import User from '../models/User.model.js';
 
+export const getActualUser = async (req, res) => {
+    const userId = req.userId;
+
+    const user = await User.findById(userId);
+
+    const userResponse = {
+        _id: user._id,
+        nombre: user.nombre,
+        apellido: user.apellido,
+        email: user.email,
+        favoritos: user.favoritos,
+        equipos: user.equipos,
+        historial: user.historial
+    }
+
+    return res.status(200).json({userResponse});
+}
+
 export const getUsers = async (req, res) => {
     try {
         const users = await User.find();
@@ -40,9 +58,7 @@ export const favoritosUser = async (req, res) => {
         const user = await User.findById(userId);
 
         if(user.favoritos.length < 1){
-            return res.status(204).json({
-                message: "La petición se recibió con éxito pero no hay datos en favoritos",
-            });
+            return res.status(204);
         }
 
         return res.status(200).json({
