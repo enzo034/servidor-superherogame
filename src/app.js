@@ -1,7 +1,10 @@
 import express from 'express';
 
-//CORS
+
+//CORS / middlewares
 import cors from 'cors';
+import { csp } from './middlewares/csp.js';
+import { limiter } from './middlewares/limiter.js';
 
 //rutas
 import authRoutes from './routes/Auth.routes.js';
@@ -10,6 +13,8 @@ import userRoutes from './routes/User.routes.js';
 
 const app = express();
 
+app.use(csp);
+app.use(limiter);
 app.use(cors());
 app.use(express.json());
 

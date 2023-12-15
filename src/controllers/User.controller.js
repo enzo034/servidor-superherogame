@@ -1,9 +1,17 @@
 import User from '../models/User.model.js';
 
 export const getUsers = async (req, res) => {
-    const users = await User.find();
+    try {
+        const users = await User.find();
 
-    return res.status(200).json({ users });
+        return res.status(200).json({ users });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Hubo un error al obtener los usuarios",
+            error: error.message
+        });
+    }
 }
 
 export const updateUser = async (req, res) => {
@@ -17,8 +25,34 @@ export const updateUser = async (req, res) => {
             user: updatedUser
         });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({
             message: "Hubo un error al actualizar el usuario",
+            error: error.message
+        });
+    }
+}
+
+export const favoritosUser = async (req, res) => {
+    try {
+        const userId = req.userId;
+
+        const user = await User.findById(userId);
+
+        if(user.favoritos.length < 1){
+            return res.status(204).json({
+                message: "La petición se recibió con éxito pero no hay datos en favoritos",
+            });
+        }
+
+        return res.status(200).json({
+            message: "Devolución exitosa",
+            listaFavoritos: user.favoritos
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Hubo un error al intentar devolver los favoritos",
             error: error.message
         });
     }
