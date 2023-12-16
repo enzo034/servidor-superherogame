@@ -1,21 +1,27 @@
 import User from '../models/User.model.js';
+import catchError from '../utils/genericError.js';
 
 export const getActualUser = async (req, res) => {
-    const userId = req.userId;
+    try {
+        const userId = req.userId;
 
-    const user = await User.findById(userId);
+        const user = await User.findById(userId);
 
-    const userResponse = {
-        _id: user._id,
-        nombre: user.nombre,
-        apellido: user.apellido,
-        email: user.email,
-        favoritos: user.favoritos,
-        equipos: user.equipos,
-        historial: user.historial
+        const userResponse = {
+            _id: user._id,
+            nombre: user.nombre,
+            apellido: user.apellido,
+            email: user.email,
+            favoritos: user.favoritos,
+            equipos: user.equipos,
+            historial: user.historial
+        }
+
+        return res.status(200).json({ userResponse });
+    } catch (error) {
+        catchError(error);
+        return;
     }
-
-    return res.status(200).json({userResponse});
 }
 
 export const getUsers = async (req, res) => {
@@ -24,11 +30,8 @@ export const getUsers = async (req, res) => {
 
         return res.status(200).json({ users });
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            message: "Hubo un error al obtener los usuarios",
-            error: error.message
-        });
+        catchError(error);
+        return;
     }
 }
 
@@ -43,11 +46,8 @@ export const updateUser = async (req, res) => {
             user: updatedUser
         });
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            message: "Hubo un error al actualizar el usuario",
-            error: error.message
-        });
+        catchError(error);
+        return;
     }
 }
 
@@ -57,7 +57,7 @@ export const favoritosUser = async (req, res) => {
 
         const user = await User.findById(userId);
 
-        if(user.favoritos.length < 1){
+        if (user.favoritos.length < 1) {
             return res.status(204);
         }
 
@@ -66,10 +66,43 @@ export const favoritosUser = async (req, res) => {
             listaFavoritos: user.favoritos
         });
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            message: "Hubo un error al intentar devolver los favoritos",
-            error: error.message
-        });
+        catchError(error);
+        return;
+    }
+}
+
+export const agregarFavorito = async (req, res) => {
+    try {
+        const userId = req.userId;
+
+        const heroeId = req.body.heroeId;
+
+        const updatedUser = await User.findByIdAndUpdate(userId, { $push: { favoritos: heroeId } }, { new: true });
+
+        res.status(200).json({
+            message: "El heroe fué agregado a favoritos",
+            updatedUser
+        })
+    } catch (error) {
+        catchError(error);
+        return;
+    }
+}
+
+export const eliminarFavorito = async (req, res) => {
+    try {
+        const userId = req.userId;
+
+        const heroeId = req.body.heroeId;
+
+        const updatedUser = await User.findByIdAndUpdate(userId, { $pull: { favoritos: heroeId } }, { new: true });
+
+        res.status(200).json({
+            message: "El heroe fué eliminado de favoritos",
+            updatedUser
+        })
+    } catch (error) {
+        catchError(error);
+        return;
     }
 }

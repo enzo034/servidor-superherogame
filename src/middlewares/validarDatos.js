@@ -11,7 +11,7 @@ export const validarDatos = (req, res, next) => {
 
     const {nombre, apellido, email, password} = req.body;
 
-    const validatorResult = schemaRegistro.validate({nombre, apellido, email, password});
+    const validatorResult = schemaRegistro.validate({nombre, apellido, email, password}, {abortEarly: false});
 
     if(validatorResult.error) {
         return res.status(400).json({ 

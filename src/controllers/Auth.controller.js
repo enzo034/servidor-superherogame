@@ -1,6 +1,7 @@
 import User from '../models/User.model.js';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '../config.js';
+import catchError from '../utils/genericError.js';
 
 export const signUp = async (req, res) => {
     try {
@@ -17,8 +18,8 @@ export const signUp = async (req, res) => {
 
         return res.status(200).json({ message: "Usuario registrado con éxito" });
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({ message: "Ocurrió un error inesperado" })
+        catchError(error);
+        return;
     }
 }
 
@@ -42,7 +43,7 @@ export const signIn = async (req, res) => {
 
         return res.status(200).json({ token });
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({ message: "Ocurrió un error inesperado" })
+        catchError(error);
+        return;
     }
 }

@@ -1,21 +1,27 @@
 import User from '../models/User.model.js';
 import Pelea from '../models/Pelea.model.js';
+import catchError from '../utils/genericError.js';
 
 export const getPeleasByUser = async (req, res) => {
-    const userId = req.userId;
+    try {
+        const userId = req.userId;
 
-    const user = await User.findById(userId);
+        const user = await User.findById(userId);
 
-    if(user.historial.length < 1){
-        return res.status(204);
+        if (user.historial.length < 1) {
+            return res.status(204);
+        }
+
+        const historialCompleto = await Pelea.find({ _id: { $in: user.historial } });
+
+        return res.status(200).json({
+            message: "La petición fué completada exitosamente",
+            historialCompleto,
+        });
+    } catch (error) {
+        catchError(error);
+        return;
     }
-
-    const historialCompleto = await Pelea.find({ _id: { $in: user.historial } });
-
-    return res.status(200).json({
-        message: "La petición fué completada exitosamente",
-        historialCompleto,
-    });
 }
 
 export const agregarPelea = async (req, res) => {
@@ -52,7 +58,7 @@ export const agregarPelea = async (req, res) => {
             actualUser
         })
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({ message: "Ocurrió un error inesperado" })
+        catchError(error);
+        return;
     }
 }
