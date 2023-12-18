@@ -77,7 +77,17 @@ export const agregarFavorito = async (req, res) => {
 
         const heroeId = req.body.heroeId;
 
-        const updatedUser = await User.findByIdAndUpdate(userId, { $push: { favoritos: heroeId } }, { new: true });
+        const user = await User.findOneAndUpdate(
+            { _id: userId, favoritos: { $ne: heroeId } },
+            { $push: { favoritos: heroeId } },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(400).json({
+                message: "El héroe ya está en la lista de favoritos"
+            });
+        }
 
         res.status(200).json({
             message: "El heroe fué agregado a favoritos",
@@ -95,7 +105,17 @@ export const eliminarFavorito = async (req, res) => {
 
         const heroeId = req.body.heroeId;
 
-        const updatedUser = await User.findByIdAndUpdate(userId, { $pull: { favoritos: heroeId } }, { new: true });
+        const updatedUser = await User.findOneAndUpdate(
+            { _id: userId, favoritos: heroeId },
+            { $pull: { favoritos: heroeId } },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({
+                message: "El héroe no está en la lista de favoritos"
+            });
+        }
 
         res.status(200).json({
             message: "El heroe fué eliminado de favoritos",

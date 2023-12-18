@@ -3,6 +3,7 @@ import { Router } from 'express';
 //Middleware
 import { validarToken } from '../middlewares/validarToken.js'
 import { validarActualizacionUsuario } from '../middlewares/validarActualizacionUsuario.js';
+import { limiter, mLimiter, smLimiter } from '../middlewares/limiter.js';
 
 //Controllers
 import { updateUser, getUsers, favoritosUser, getActualUser, agregarFavorito, eliminarFavorito } from '../controllers/User.controller.js';
@@ -10,15 +11,15 @@ import { updateUser, getUsers, favoritosUser, getActualUser, agregarFavorito, el
 
 const router = Router();
 
-router.get('/getActualUser', validarToken, getActualUser);
-router.get('/getUsers',validarToken, getUsers);
-router.get('/favoritos', validarToken, favoritosUser);
+router.get('/getActualUser', [validarToken, limiter], getActualUser);
+router.get('/getUsers', [validarToken, mLimiter], getUsers);
+router.get('/favoritos', [validarToken, mLimiter], favoritosUser);
 
-router.post('/agregarFavorito', validarToken, agregarFavorito);
+router.post('/agregarFavorito', [validarToken, smLimiter], agregarFavorito);
 
-router.delete('/eliminarFavorito', validarToken, eliminarFavorito);
+router.delete('/eliminarFavorito', [validarToken, smLimiter], eliminarFavorito);
 
-router.put('/update', [validarToken, validarActualizacionUsuario], updateUser);
+router.put('/update', [validarToken, validarActualizacionUsuario, limiter], updateUser);
 
 
 
