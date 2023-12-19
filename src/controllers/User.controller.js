@@ -77,13 +77,13 @@ export const agregarFavorito = async (req, res) => {
 
         const heroeId = req.body.heroeId;
 
-        const user = await User.findOneAndUpdate(
+        const updatedUser = await User.findOneAndUpdate(
             { _id: userId, favoritos: { $ne: heroeId } },
             { $push: { favoritos: heroeId } },
             { new: true }
         );
 
-        if (!user) {
+        if (!updatedUser) {
             return res.status(400).json({
                 message: "El héroe ya está en la lista de favoritos"
             });
@@ -103,7 +103,7 @@ export const eliminarFavorito = async (req, res) => {
     try {
         const userId = req.userId;
 
-        const heroeId = req.body.heroeId;
+        const heroeId = req.params.heroeId;
 
         const updatedUser = await User.findOneAndUpdate(
             { _id: userId, favoritos: heroeId },

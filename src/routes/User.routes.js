@@ -17,7 +17,7 @@ router.get('/favoritos', [validarToken, mLimiter], favoritosUser);
 
 router.post('/agregarFavorito', [validarToken, smLimiter], agregarFavorito);
 
-router.delete('/eliminarFavorito', [validarToken, smLimiter], eliminarFavorito);
+router.delete('/eliminarFavorito/:heroeId', [validarToken, smLimiter], eliminarFavorito);
 
 router.put('/update', [validarToken, validarActualizacionUsuario, limiter], updateUser);
 
