@@ -15,7 +15,7 @@ router.get('/getActualUser', [validarToken, limiter], getActualUser);
 router.get('/getUsers', [validarToken, mLimiter], getUsers);
 router.get('/favoritos', [validarToken, mLimiter], favoritosUser);
 
-router.post('/agregarFavorito/:heroeId', [validarToken, smLimiter], agregarFavorito);
+router.put('/agregarFavorito/:heroeId', [validarToken, smLimiter], agregarFavorito);
 
 router.delete('/eliminarFavorito/:heroeId', [validarToken, smLimiter], eliminarFavorito);
 
