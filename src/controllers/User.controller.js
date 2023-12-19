@@ -75,7 +75,7 @@ export const agregarFavorito = async (req, res) => {
     try {
         const userId = req.userId;
 
-        const heroeId = req.body.heroeId;
+        const heroeId = req.params.heroeId;
 
         const updatedUser = await User.findOneAndUpdate(
             { _id: userId, favoritos: { $ne: heroeId } },
