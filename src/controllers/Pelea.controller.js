@@ -9,7 +9,7 @@ export const getPeleasByUser = async (req, res) => {
         const user = await User.findById(userId);
 
         if (user.historial.length < 1) {
-            return res.status(204);
+            return res.status(204).send();
         }
 
         const historialCompleto = await Pelea.find({ _id: { $in: user.historial } });

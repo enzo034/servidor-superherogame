@@ -11,7 +11,8 @@ export const signUp = async (req, res) => {
             nombre,
             apellido,
             email,
-            password: await User.encryptPassword(password)
+            password: await User.encryptPassword(password),
+            equipos: chooseFirstHeroes()
         })
 
         await newUser.save();
@@ -22,6 +23,18 @@ export const signUp = async (req, res) => {
         return;
     }
 }
+
+const chooseFirstHeroes = () => {
+    const heroesId = new Set(); //En la estructura set no puede haber datos repetidos
+    const totalHeroes = 731; // Cantidad total de héroes
+
+    while (heroesId.size < 5) {
+        const randomId = Math.floor(Math.random() * totalHeroes) + 1;
+        heroesId.add(randomId);
+    }
+
+    return Array.from(heroesId);
+};
 
 export const signIn = async (req, res) => {
     try {
