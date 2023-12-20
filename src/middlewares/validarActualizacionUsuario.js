@@ -7,7 +7,7 @@ const schemaActualizacionUsuario = Joi.object({
     password: Joi.string().min(8).max(24)
 }).min(1); // Al menos un campo debe estar presente en la solicitud
 
-export const validarActualizacionUsuario = (req, res, next) => {
+export const validarActualizacionUsuario = async (req, res, next) => {
     const { nombre, apellido, email, password } = req.body;
 
     const validatorResult = schemaActualizacionUsuario.validate({ nombre, apellido, email, password }, { abortEarly: false });
@@ -17,6 +17,10 @@ export const validarActualizacionUsuario = (req, res, next) => {
             message: `Uno de los campos tiene un error`,
             error: validatorResult.error.details
         });
+    }
+
+    if(password){
+        req.body.password = await User.encryptPassword(password);
     }
 
     next();
