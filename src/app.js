@@ -1,10 +1,7 @@
 import express from 'express';
 
-
 //CORS / middlewares
 import cors from 'cors';
-import { csp } from './middlewares/csp.js';
-//import { limiter } from './middlewares/limiter.js';
 
 import helmet from 'helmet';
 
@@ -15,9 +12,8 @@ import userRoutes from './routes/User.routes.js';
 
 const app = express();
 
-app.use(helmet());
-//app.use(limiter);
 app.use(cors());
+app.use(helmet());
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
