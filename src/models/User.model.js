@@ -20,7 +20,7 @@ const userSchema = new Schema({
     equipos: [Number],
     historial: [{
         ref: 'Pelea',
-        type: Schema.Types.ObjectId
+        type: Schema.Types.ObjectId,
     }],
     primeraVez: {
         type: Boolean,
