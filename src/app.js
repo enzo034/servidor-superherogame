@@ -1,18 +1,28 @@
 import express from 'express';
-
-//CORS / middlewares
 import cors from 'cors';
-
 import helmet from 'helmet';
 
-//rutas
 import authRoutes from './routes/Auth.routes.js';
 import peleaRoutes from './routes/Pelea.routes.js';
 import userRoutes from './routes/User.routes.js';
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = ['http://localhost:4200'];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Permitir peticiones desde el mismo servidor
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true
+}));
+
 app.use(helmet());
 app.use(express.json());
 
