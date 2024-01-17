@@ -37,26 +37,25 @@ export const agregarPelea = async (req, res) => {
         })
 
         const savedPelea = await newPelea.save();
-
-        let user = User.findById(userId);
     
         let updateQuery;
 
         if (idGanador === idHeroe1) {
-            user.historial.push(savedPelea._id);
-            user.equipos.push(idHeroe2);
-        } else if(user.equipos.length === 1){
-            user.historial.push(savedPelea._id);
+            updateQuery = {
+                $push: { historial: savedPelea._id, equipos: idHeroe2 }
+            };
         } else {
-            user.historial.push(savedPelea._id);
-            user.historial.pull(idHeroe1);
+            updateQuery = {
+                $push: { historial: savedPelea._id },
+                $pull: { equipos: idHeroe1 }
+            };
         }
 
-        await user.save();
+        const actualUser = await User.findByIdAndUpdate(userId, updateQuery, { new: true });
 
         return res.status(200).json({
             message: "La pelea se guardó correctamente",
-            user
+            actualUser
         })
     } catch (error) {
         catchError(error);
