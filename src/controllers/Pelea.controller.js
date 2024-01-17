@@ -44,11 +44,15 @@ export const agregarPelea = async (req, res) => {
             updateQuery = {
                 $push: { historial: savedPelea._id, equipos: idHeroe2 }
             };
-        } else {
+        } else if(!req.body.isLast){
             updateQuery = {
                 $push: { historial: savedPelea._id },
                 $pull: { equipos: idHeroe1 }
             };
+        } else {
+            updateQuery = {
+                $push: { historial: savedPelea._id }
+            }
         }
 
         const actualUser = await User.findByIdAndUpdate(userId, updateQuery, { new: true });
