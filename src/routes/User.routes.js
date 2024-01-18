@@ -6,7 +6,7 @@ import { validarActualizacionUsuario } from '../middlewares/validarActualizacion
 import { limiter, mLimiter, smLimiter } from '../middlewares/limiter.js';
 
 //Controllers
-import { updateUser, getUsers, favoritosUser, getActualUser, agregarFavorito, eliminarFavorito, equipoUser } from '../controllers/User.controller.js';
+import { updateUser, getUsers, favoritosUser, getActualUser, agregarFavorito, eliminarFavorito, equipoUser, validarUsuario } from '../controllers/User.controller.js';
 
 
 const router = Router();
@@ -16,11 +16,13 @@ router.get('/getUsers', [validarToken, mLimiter], getUsers);
 router.get('/favoritos', [validarToken, mLimiter], favoritosUser);
 router.get('/equipo', [validarToken, mLimiter], equipoUser);
 
+router.post('/validarUsuario', validarToken, validarUsuario);
+
 router.put('/agregarFavorito/:heroeId', [validarToken, smLimiter], agregarFavorito);
+router.put('/update', [validarToken, validarActualizacionUsuario, limiter], updateUser);
 
 router.delete('/eliminarFavorito/:heroeId', [validarToken, smLimiter], eliminarFavorito);
 
-router.put('/update', [validarToken, validarActualizacionUsuario, limiter], updateUser);
 
 
 

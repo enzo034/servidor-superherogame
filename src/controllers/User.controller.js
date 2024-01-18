@@ -146,3 +146,7 @@ export const eliminarFavorito = async (req, res) => {
         return;
     }
 }
+
+export const validarUsuario = (req, res) => {
+    res.status(200).json({validate: true})
+}
