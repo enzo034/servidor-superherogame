@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 //Controllers
-import { signUp, signIn } from '../controllers/Auth.controller.js';
+import { signUp, signIn, requestPasswordRecovery, resetPassword } from '../controllers/Auth.controller.js';
 
 //middlewares
 import { verificarEmailDuplicado } from '../middlewares/verificarEmail.js';
@@ -14,5 +14,7 @@ router.use(limiter);
 
 router.post('/signup', [verificarEmailDuplicado, validarDatos], signUp);
 router.post('/signin', signIn);
+router.post('/recoverPassword', requestPasswordRecovery);
+router.post('/resetPassword/:token', resetPassword);
 
 export default router;

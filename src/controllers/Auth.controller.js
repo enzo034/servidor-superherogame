@@ -1,7 +1,10 @@
 import User from '../models/User.model.js';
 import jwt from 'jsonwebtoken';
-import { SECRET_KEY } from '../config.js';
+import { SECRET_KEY, CURRENT_URL, NM_EMAIL } from '../config.js';
 import catchError from '../utils/genericError.js';
+import RecoveryToken from '../models/Token.model.js'
+import { transporter } from '../utils/transporterMail.js';
+import bcrypt from 'bcrypt'
 
 export const signUp = async (req, res) => {
     try {
@@ -58,5 +61,69 @@ export const signIn = async (req, res) => {
     } catch (error) {
         catchError(error);
         return;
+    }
+}
+
+export const requestPasswordRecovery = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ message: 'Correo electrónico no encontrado' });
+        }
+
+        const token = await bcrypt.hash(email + Date.now(), 10);
+        const expiry = new Date();
+        expiry.setHours(expiry.getHours() + 1);
+
+        await RecoveryToken.create({ email, token, expiry });
+
+        const recoveryLink = `${CURRENT_URL}/resetPassword/${token}`;
+        const mailOptions = {
+            from: NM_EMAIL,
+            to: email,
+            subject: 'Recuperación de contraseña',
+            text: `Haz clic en el siguiente enlace para restablecer tu contraseña: ${recoveryLink}`,
+        };
+        
+        transporter.sendMail(mailOptions, (error) => {
+            if (error) {
+                console.error(error);
+                return res.status(500).json({ message: 'Error al enviar el correo electrónico' });
+            }
+            res.json({ message: 'Se ha enviado un correo electrónico con las instrucciones de recuperación de contraseña' });
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: 'Error al solicitar la recuperación de contraseña'
+        });
+    }
+}
+
+export const resetPassword = async (req, res) => {
+    try {
+        const { token } = req.params;
+        const { newPassword } = req.body;
+
+        const recoveryToken = await RecoveryToken.findOne({ token });
+
+        if (!recoveryToken || recoveryToken.expiry < new Date()) {
+            return res.status(400).json({ message: 'Enlace de recuperación inválido o vencido' });
+        }
+
+        const user = await User.findOne({ email: recoveryToken.email });
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        user.password = hashedPassword;
+        await user.save();
+
+        await RecoveryToken.deleteOne({ token });
+
+        res.json({ message: 'Contraseña restablecida exitosamente' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al restablecer la contraseña' });
     }
 }
