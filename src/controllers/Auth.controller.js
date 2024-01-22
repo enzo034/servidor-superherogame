@@ -64,6 +64,8 @@ export const signIn = async (req, res) => {
     }
 }
 
+import crypto from 'crypto';
+
 export const requestPasswordRecovery = async (req, res) => {
     try {
         const { email } = req.body;
@@ -74,7 +76,7 @@ export const requestPasswordRecovery = async (req, res) => {
             return res.status(404).json({ message: 'Correo electrónico no encontrado' });
         }
 
-        const token = await bcrypt.hash(email + Date.now(), 10);
+        const token = crypto.randomBytes(20).toString('hex'); // Genera un token aleatorio
         const expiry = new Date();
         expiry.setHours(expiry.getHours() + 1);
 
@@ -87,21 +89,16 @@ export const requestPasswordRecovery = async (req, res) => {
             subject: 'Recuperación de contraseña',
             text: `Haz clic en el siguiente enlace para restablecer tu contraseña: ${recoveryLink}`,
         };
+
+        await transporter.sendMail(mailOptions);
         
-        transporter.sendMail(mailOptions, (error) => {
-            if (error) {
-                console.error(error);
-                return res.status(500).json({ message: 'Error al enviar el correo electrónico' });
-            }
-            res.json({ message: 'Se ha enviado un correo electrónico con las instrucciones de recuperación de contraseña' });
-        });
+        res.json({ message: 'Se ha enviado un correo electrónico con las instrucciones de recuperación de contraseña' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({
-            message: 'Error al solicitar la recuperación de contraseña'
-        });
+        res.status(500).json({ message: 'Error al solicitar la recuperación de contraseña' });
     }
 }
+
 
 export const resetPassword = async (req, res) => {
     try {
