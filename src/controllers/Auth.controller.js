@@ -82,7 +82,7 @@ export const requestPasswordRecovery = async (req, res) => {
 
         await RecoveryToken.create({ email, token, expiry });
 
-        const recoveryLink = `${CURRENT_URL}/resetPassword/${token}`;
+        const recoveryLink = `${CURRENT_URL}/resetpassword/${token}`;
         const mailOptions = {
             from: NM_EMAIL,
             to: email,
