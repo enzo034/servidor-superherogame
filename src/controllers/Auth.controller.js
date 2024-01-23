@@ -87,11 +87,23 @@ export const requestPasswordRecovery = async (req, res) => {
             from: NM_EMAIL,
             to: email,
             subject: 'Recuperación de contraseña',
-            text: `Haz clic en el siguiente enlace para restablecer tu contraseña: ${recoveryLink}`,
+            html: `
+                <div style="max-width: 600px; margin: 20px auto; background-color: #ffffff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                    <p style="font-family: Arial, sans-serif; margin: 0; padding: 0;">
+                    Hola,
+                    </p>    
+                    <p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
+                    <a href="${recoveryLink}" style="color: #007bff; text-decoration: none;">${recoveryLink}</a>
+                    <p>Este enlace expirará en una hora.</p>
+                    <p>Si no solicitaste restablecer tu contraseña, puedes ignorar este correo.</p>
+                    <p>Saludos,</p>
+                    <p>SHG</p>
+                </div>
+            `,
         };
 
         await transporter.sendMail(mailOptions);
-        
+
         res.json({ message: 'Se ha enviado un correo electrónico con las instrucciones de recuperación de contraseña' });
     } catch (error) {
         console.error(error);
