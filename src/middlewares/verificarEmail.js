@@ -7,5 +7,5 @@ export const verificarEmailDuplicado = async (req, res, next) => {
     if(email) return res.status(400).json({message: "El email ya está en uso"});
 
     next();
-
+    
 }

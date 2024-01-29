@@ -2,7 +2,6 @@
 
 import RecoveryToken from '../models/Token.model.js';
 
-// Define la lógica para eliminar tokens vencidos
 const deleteOldRecoveryTokens = () => {
     setInterval(async () => {
         try {

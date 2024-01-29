@@ -4,6 +4,7 @@ import { Router } from 'express';
 import { validarToken } from '../middlewares/validarToken.js'
 import { validarActualizacionUsuario } from '../middlewares/validarActualizacionUsuario.js';
 import { limiter, mLimiter, smLimiter } from '../middlewares/limiter.js';
+import { verificarEmailDuplicado } from '../middlewares/verificarEmail.js';
 
 //Controllers
 import { updateUser, getUsers, favoritosUser, getActualUser, agregarFavorito, eliminarFavorito, equipoUser, validarUsuario } from '../controllers/User.controller.js';
@@ -19,11 +20,8 @@ router.get('/equipo', [validarToken, mLimiter], equipoUser);
 router.post('/validarUsuario', validarToken, validarUsuario);
 
 router.put('/agregarFavorito/:heroeId', [validarToken, smLimiter], agregarFavorito);
-router.put('/update', [validarToken, validarActualizacionUsuario, limiter], updateUser);
+router.put('/update', [validarToken, validarActualizacionUsuario, verificarEmailDuplicado, limiter], updateUser);
 
 router.delete('/eliminarFavorito/:heroeId', [validarToken, smLimiter], eliminarFavorito);
-
-
-
 
 export default router;
