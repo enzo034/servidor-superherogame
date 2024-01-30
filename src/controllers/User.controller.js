@@ -51,6 +51,29 @@ export const updateUser = async (req, res) => {
     }
 }
 
+export const updatePassword = async (req, res) => {
+    const userId = req.userId;
+    try {
+        const user = await User.findById(userId);
+
+        const { actualPassword, newPassword } = req.body;
+
+        const matchPassword = await User.comparePassword(actualPassword, user.password);
+
+        if (!matchPassword) {
+            return res.status(401).json({ success: false, message: "Contraseña actual incorrecta" });
+        }
+
+        user.password = await User.encryptPassword(newPassword);
+        await user.save();
+
+        return res.status(200).json({ success: true, message: 'La contraseña fue cambiada correctamente' });
+    } catch (error) {
+        return catchError(error);
+    }
+};
+
+
 export const favoritosUser = async (req, res) => {
     try {
         const userId = req.userId;
@@ -148,5 +171,5 @@ export const eliminarFavorito = async (req, res) => {
 }
 
 export const validarUsuario = (req, res) => {
-    res.status(200).json({validate: true})
+    res.status(200).json({ validate: true })
 }

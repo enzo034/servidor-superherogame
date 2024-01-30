@@ -5,6 +5,7 @@ import catchError from '../utils/genericError.js';
 import RecoveryToken from '../models/Token.model.js'
 import { transporter } from '../utils/transporterMail.js';
 import bcrypt from 'bcrypt'
+import crypto from 'crypto';
 
 export const signUp = async (req, res) => {
     try {
@@ -64,7 +65,7 @@ export const signIn = async (req, res) => {
     }
 }
 
-import crypto from 'crypto';
+
 
 export const requestPasswordRecovery = async (req, res) => {
     try {
