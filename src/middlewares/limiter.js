@@ -13,7 +13,7 @@ export const mLimiter = rateLimit({
 });
 
 export const smLimiter = rateLimit({
-    windowMs: 1000,
+    windowMs: 500,
     max: 2,
     message: "El limite de entradas en el mismo periodo de tiempo se excedió"
 });
