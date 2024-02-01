@@ -61,13 +61,13 @@ export const updatePassword = async (req, res) => {
         const matchPassword = await User.comparePassword(actualPassword, user.password);
 
         if (!matchPassword) {
-            return res.status(401).json({ success: false, message: "Contraseña actual incorrecta" });
+            return res.status(401).json({ message: "Contraseña actual incorrecta" });
         }
 
         user.password = await User.encryptPassword(newPassword);
         await user.save();
 
-        return res.status(200).json({ success: true, message: 'La contraseña fue cambiada correctamente' });
+        return res.status(200).json({ message: 'La contraseña fue cambiada correctamente' });
     } catch (error) {
         return catchError(error);
     }

@@ -5,11 +5,11 @@ import { agregarPelea, getPeleasByUser } from '../controllers/Pelea.controller.j
 
 //Middlewares
 import { validarToken } from '../middlewares/validarToken.js';
-import { mLimiter } from '../middlewares/limiter.js';
+import { smLimiter } from '../middlewares/limiter.js';
 
 const router = Router();
 
-router.use(mLimiter);
+router.use(smLimiter);
 
 router.get('/getPeleas', validarToken, getPeleasByUser);
 router.post('/agregar', validarToken, agregarPelea);
