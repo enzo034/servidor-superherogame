@@ -14,7 +14,8 @@ export const getActualUser = async (req, res) => {
             email: user.email,
             favoritos: user.favoritos,
             equipos: user.equipos,
-            historial: user.historial
+            historial: user.historial,
+            confirmado: user.confirmado
         }
 
         return res.status(200).json({ userResponse });

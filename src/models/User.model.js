@@ -22,10 +22,6 @@ const userSchema = new Schema({
         ref: 'Pelea',
         type: Schema.Types.ObjectId,
     }],
-    primeraVez: {
-        type: Boolean,
-        default: true
-    },
     confirmado: {
         type: Boolean,
         default: false,
