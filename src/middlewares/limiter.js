@@ -18,3 +18,8 @@ export const smLimiter = rateLimit({
     message: "El limite de entradas en el mismo periodo de tiempo se excedió"
 });
 
+export const rLimiter = rateLimit({
+    windowMs: 60000,
+    max: 1,
+    message: "Solo puedes recibir un mail cada un minuto."
+})

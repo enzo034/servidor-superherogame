@@ -1,25 +1,22 @@
 import { Router } from 'express';
 
 //Controllers
-import { signUp, signIn, requestPasswordRecovery, resetPassword } from '../controllers/Auth.controller.js';
+import { signUp, signIn, requestPasswordRecovery, resetPassword, confirmEmail, sendConfirmationEmail } from '../controllers/Auth.controller.js';
 
 //middlewares
 import { verificarEmailDuplicado } from '../middlewares/verificarEmail.js';
 import { validarDatos } from '../middlewares/validarDatos.js';
-import { limiter } from '../middlewares/limiter.js';
-import rateLimit from 'express-rate-limit';
+import { limiter, rLimiter } from '../middlewares/limiter.js';
+import { validarToken } from '../middlewares/validarToken.js'
 
 const router = Router();
 
 router.post('/signup', [verificarEmailDuplicado, validarDatos, limiter], signUp);
-router.post('/signin', limiter,signIn);
+router.get('/confirmemail/:token', confirmEmail);
+router.post('/requestConfirmationEmail', [validarToken, rLimiter], sendConfirmationEmail);
+router.post('/signin', limiter, signIn);
 
-router.post('/recoverPassword', rateLimit({
-    windowMs: 60000,
-    max: 1,
-    message: "Solo puedes recibir un mail cada un minuto."
-})
-,requestPasswordRecovery);
+router.post('/recoverPassword', rLimiter, requestPasswordRecovery);
 
 router.post('/resetPassword/:token', resetPassword);
 

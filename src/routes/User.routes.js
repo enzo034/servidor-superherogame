@@ -14,8 +14,8 @@ const router = Router();
 
 router.get('/getActualUser', [validarToken, limiter], getActualUser);
 router.get('/getUsers', [validarToken, mLimiter], getUsers);
-router.get('/favoritos', [validarToken, mLimiter], favoritosUser);
-router.get('/equipo', [validarToken, mLimiter], equipoUser);
+router.get('/favoritos', [validarToken, smLimiter], favoritosUser);
+router.get('/equipo', [validarToken, smLimiter], equipoUser);
 
 router.post('/validarUsuario', validarToken, validarUsuario);
 
