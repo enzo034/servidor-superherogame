@@ -18,7 +18,7 @@ export const validarActualizacionUsuario = async (req, res, next) => {
         });
     }
 
-    if(req.body.password){
+    if(req.body.password || req.body.newPassword){
         return res.status(405).json({message: "Para cambiar la contraseña es necesario utilizar el endpoint designado para ello."});
     }
 
