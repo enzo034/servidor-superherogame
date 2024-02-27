@@ -8,7 +8,7 @@ const schemaActualizacionUsuario = Joi.object({
 }).min(1); // Al menos un campo debe estar presente en la solicitud
 
 export const validarActualizacionUsuario = async (req, res, next) => {
-    const { nombre, apellido, email } = req.body;
+    const { nombre, apellido, email, confirmado } = req.body;
 
     const validatorResult = schemaActualizacionUsuario.validate({ nombre, apellido, email, confirmado }, { abortEarly: false });
 
