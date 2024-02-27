@@ -110,6 +110,12 @@ export const sendConfirmationEmail = async (req, res) => {
             return res.status(400).json({ message: 'Ya se ha enviado un correo de confirmación para este correo electrónico' });
         }
 
+        const user = await User.findById(req.userId);
+
+        if(user && user.confirmado){
+            return res.status(400).json({ message: 'El usuario ya se ha confirmado, inicie sesión nuevamente.' });
+        }
+
         // Crear y enviar token de confirmación por correo electrónico
         const confirmationToken = crypto.randomBytes(20).toString('hex');
         const expiry = new Date();
